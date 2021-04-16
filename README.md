@@ -1,21 +1,19 @@
-## Obsidian Sample Plugin
+# Obsidian - New File Template plugin
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+(Currently, I don't publish this plugin to the central repo. if you want to use this plugin, feel free to request in the github issues)
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+## What's this?
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+Create every new file with specified template.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+![https://i.imgur.com/n3AWkRT.png]
 
-### First time developing plugins?
+### Commands
+
+This plugin adds `New File Template: Create new file with template` command.
+This command creates new file from the template.
+
+## Hacking
 
 Quick starting guide for new plugin devs:
 
@@ -41,16 +39,16 @@ Quick starting guide for new plugin devs:
 - Make sure you have a `README.md` file in the root of your repo.
 - Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
 
-### How to use
+## How to use
 
 - Clone this repo.
 - `npm i` or `yarn` to install dependencies
 - `npm run dev` to start compilation in watch mode.
 
-### Manually installing the plugin
+## Manually installing the plugin
 
 - Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
 
-### API Documentation
+## LICENSE
 
-See https://github.com/obsidianmd/obsidian-api
+https://tokuhirom.mit-license.org/

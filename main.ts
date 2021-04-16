@@ -1,60 +1,66 @@
-import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import {App, moment, Plugin, PluginSettingTab, Setting} from 'obsidian';
 
 interface MyPluginSettings {
-	mySetting: string;
+	template: string;
 }
 
+const DEFAULT_TEMPLATE = (
+		"---\n" +
+		"date: {{date:YYYY-MM-DD}}\n" +
+		"aliases: []\n" +
+		"---\n"
+);
+
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+	template: DEFAULT_TEMPLATE
 }
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
-		console.log('loading plugin');
+		console.log('loading new-file-template plugin');
 
 		await this.loadSettings();
 
-		this.addRibbonIcon('dice', 'Sample Plugin', () => {
-			new Notice('This is a notice!');
-		});
-
-		this.addStatusBarItem().setText('Status Bar Text');
-
-		this.addCommand({
-			id: 'open-sample-modal',
-			name: 'Open Sample Modal',
-			// callback: () => {
-			// 	console.log('Simple Callback');
-			// },
-			checkCallback: (checking: boolean) => {
-				let leaf = this.app.workspace.activeLeaf;
-				if (leaf) {
-					if (!checking) {
-						new SampleModal(this.app).open();
-					}
-					return true;
-				}
-				return false;
-			}
-		});
-
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
-		this.registerCodeMirror((cm: CodeMirror.Editor) => {
-			console.log('codemirror', cm);
+		this.addCommand({
+			id: 'new-file-with-template',
+			name: 'Create new file with template',
+			callback: this.createNewFile.bind(this)
 		});
 
-		this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-			console.log('click', evt);
-		});
+		// this.registerEvent(this.app.vault.on("create", this.onFileCreated.bind(this)));
+	}
 
-		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
+	async createNewFile() : Promise<boolean> {
+			console.log("Create new file with template!!")
+			const data = this.renderTemplate(this.settings.template);
+			for (let i=0; i<1000; i++) {
+				const path = i==0 ? "Untitled.md" : "Untitled " + i + ".md";
+				try {
+					await this.app.vault.create(path, data);
+				} catch (e) {
+					console.log(path);
+					console.log(e);
+					continue;
+				}
+				await this.app.workspace.openLinkText(path, '', false);
+				console.log("All done!");
+				return true;
+			}
+			return false;
+	}
+
+	renderTemplate(v: string) {
+		return v.replace(/{{\s*date\s*:\s*(.*?)}}/gi, (_, fmt) => {
+			return moment().format(fmt);
+		});
 	}
 
 	onunload() {
-		console.log('unloading plugin');
+		console.log('unloading new-file-templatte plugin');
 	}
 
 	async loadSettings() {
@@ -63,22 +69,6 @@ export default class MyPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		let {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		let {contentEl} = this;
-		contentEl.empty();
 	}
 }
 
@@ -95,18 +85,21 @@ class SampleSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+		containerEl.createEl('h2', {text: 'Settings for new-file-template.'});
 
 		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
+			.setName('Template')
+			.setDesc('Template string\n' + 'Date formats are supported {{date:YYYYMMDDHHmm}}')
+			.addTextArea(text => {
+						text.setPlaceholder(DEFAULT_TEMPLATE)
+								.setValue(this.plugin.settings.template)
+								.onChange(async (value) => {
+									console.log('Template string: ' + value);
+									this.plugin.settings.template = value;
+									await this.plugin.saveSettings();
+								});
+						text.inputEl.rows = 10;
+					}
+			);
 	}
 }

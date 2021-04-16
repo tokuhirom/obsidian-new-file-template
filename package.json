@@ -1,7 +1,7 @@
 {
   "name": "obsidian-sample-plugin",
   "version": "0.11.13",
-  "description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+  "description": "Creating new file with template",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
