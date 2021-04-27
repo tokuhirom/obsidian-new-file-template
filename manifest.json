@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-sample-plugin",
-	"name": "New File Template",
-	"version": "0.0.1",
-	"minAppVersion": "0.9.12",
-	"description": "Creating new file with template.",
-	"author": "Obsidian",
-	"authorUrl": "https://64p.org",
-	"isDesktopOnly": false
+  "id": "obsidian-sample-plugin",
+  "name": "New File Template",
+  "version": "0.0.1",
+  "minAppVersion": "0.9.12",
+  "description": "Creating new file with template.",
+  "author": "Obsidian",
+  "authorUrl": "https://64p.org",
+  "isDesktopOnly": false
 }
