@@ -92,7 +92,7 @@ class NewFileTemplatePluginSettingTab extends PluginSettingTab {
   }
 
   display(): void {
-    const {containerEl} = this;
+    const { containerEl } = this;
 
     containerEl.empty();
 
