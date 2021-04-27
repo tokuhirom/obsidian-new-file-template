@@ -41,15 +41,14 @@ export default class NewFileTemplatePlugin extends Plugin {
       return;
     }
 
-    const content = await file.vault.read(file)
-    if (content == "" && markdownView.getMode() == "source") {
+    if (file.stat.size == 0 && markdownView.getMode() == "source") {
       const content = this.renderTemplate(this.settings.template)
       await markdownView.sourceMode.set(content, false)
 
       await markdownView.editor.focus()
       await markdownView.editor.setCursor({line: content.split(/\n/).length, ch: 1})
       // same as `workspace:edit-file-title`
-      await this.app.workspace.getActiveViewOfType(MarkdownView)?.leaf?.setEphemeralState({rename:"all"})
+      await this.app.workspace.getActiveViewOfType(MarkdownView)?.setEphemeralState({rename:"all"})
     }
   }
 
