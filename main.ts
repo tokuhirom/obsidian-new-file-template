@@ -28,7 +28,7 @@ const DEFAULT_SETTINGS: NewFileTemplatePluginSettings = {
 export default class NewFileTemplatePlugin extends Plugin {
   settings: NewFileTemplatePluginSettings;
 
-  async onload() {
+  async onload(): Promise<void> {
     console.log("loading new-file-template plugin");
 
     await this.loadSettings();
@@ -38,7 +38,7 @@ export default class NewFileTemplatePlugin extends Plugin {
     this.app.workspace.on("file-open", this.onFileOpen.bind(this));
   }
 
-  async onFileOpen(file: TFile) {
+  private async onFileOpen(file: TFile): Promise<void> {
     if (file == null) {
       return;
     }
@@ -64,21 +64,21 @@ export default class NewFileTemplatePlugin extends Plugin {
     }
   }
 
-  renderTemplate(v: string) {
+  private renderTemplate(v: string): string {
     return v.replace(/{{\s*date\s*:\s*(.*?)}}/gi, (_, fmt) => {
       return moment().format(fmt);
     });
   }
 
-  onunload() {
+  onunload(): void {
     console.log("unloading new-file-templatte plugin");
   }
 
-  async loadSettings() {
+  async loadSettings(): Promise<void> {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
   }
 
-  async saveSettings() {
+  async saveSettings(): Promise<void> {
     await this.saveData(this.settings);
   }
 }
@@ -92,7 +92,7 @@ class NewFileTemplatePluginSettingTab extends PluginSettingTab {
   }
 
   display(): void {
-    let { containerEl } = this;
+    const {containerEl} = this;
 
     containerEl.empty();
 
