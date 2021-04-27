@@ -1,11 +1,18 @@
-import {App, MarkdownView, moment, Plugin, PluginSettingTab, Setting, TFile} from "obsidian";
+import {
+  App,
+  MarkdownView,
+  moment,
+  Plugin,
+  PluginSettingTab,
+  Setting,
+  TFile,
+} from "obsidian";
 
 interface NewFileTemplatePluginSettings {
   template: string;
 }
 
-const DEFAULT_TEMPLATE =
-  `---
+const DEFAULT_TEMPLATE = `---
 date: {{date:YYYY-MM-DD}}
 aliases: []
 ---
@@ -28,7 +35,7 @@ export default class NewFileTemplatePlugin extends Plugin {
 
     this.addSettingTab(new NewFileTemplatePluginSettingTab(this.app, this));
 
-    this.app.workspace.on("file-open", this.onFileOpen.bind(this))
+    this.app.workspace.on("file-open", this.onFileOpen.bind(this));
   }
 
   async onFileOpen(file: TFile) {
@@ -42,13 +49,18 @@ export default class NewFileTemplatePlugin extends Plugin {
     }
 
     if (file.stat.size == 0 && markdownView.getMode() == "source") {
-      const content = this.renderTemplate(this.settings.template)
-      await markdownView.sourceMode.set(content, false)
+      const content = this.renderTemplate(this.settings.template);
+      await markdownView.sourceMode.set(content, false);
 
-      await markdownView.editor.focus()
-      await markdownView.editor.setCursor({line: content.split(/\n/).length, ch: 1})
+      await markdownView.editor.focus();
+      await markdownView.editor.setCursor({
+        line: content.split(/\n/).length,
+        ch: 1,
+      });
       // same as `workspace:edit-file-title`
-      await this.app.workspace.getActiveViewOfType(MarkdownView)?.setEphemeralState({rename:"all"})
+      await this.app.workspace
+        .getActiveViewOfType(MarkdownView)
+        ?.setEphemeralState({ rename: "all" });
     }
   }
 
